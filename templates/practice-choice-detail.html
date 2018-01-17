@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %}选择题详情页 - 趣学在线网{% endblock %}
+{% load staticfiles %}
+{% block custom_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/question.css' %}"/>
+{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <div class="crumbs">
+                <ul>
+                    <li><a href="/">首页</a>></li>
+                    <li><a href="{% url 'practice:practice_list' %}">在线练习</a>></li>
+                    <li><a href="{% url 'practice:practice_bank_detail' question_bank.id %}">题库详情</a>></li>
+                    <li>开始练习</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+
+{% block content %}
+
+    <section>
+        <div class="wp">
+
+            <div class="question">
+                <div class="title">{{ question.question_num }}:&nbsp{{ question.question_content }}</div>
+                <ul class="choices" id="choices">
+                    <li><i></i>A:{{ question.choiceA }}</li>
+                    <li><i></i>B:{{ question.choiceB }}</li>
+                    <li><i></i>C:{{ question.choiceC }}</li>
+                    <li><i></i>D:{{ question.choiceD }}</li>
+                </ul>
+                <div style="color:#F00" id="show_detail"></div>
+                <div class="collect" id="collect"><i></i>收藏本题</div>
+                <div class="button-group">
+                    {% if is_last_question %}
+                        <button class="submit" id="submit">交卷</button>
+                    {% else %}
+                        <button class="submit" id="submit">提前交卷</button>
+                        <button class="next" id="next">下一题</button>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}
+
+
+{% block custom_js %}
+
+    <script src="{% static 'js/jquery.min.js' %}" charset="utf-8"></script>
+    <script>
+        $(function () {
+            //  选择某个选项
+            $("#choices li").on("click", function () {
+                $(this).addClass('choose').siblings().removeClass('choose')
+            });
+            //  点击收藏
+            $("#collect").on("click", function () {
+                $(this).toggleClass("collectok")
+            })
+            //  点击提前交卷或者交卷
+            $("#submit").on("click", function () {
+                //  num是选择的答案的序号
+                var num = $(".choose").index();
+                var cur_question_num = {{ question.question_num }};
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "{% url 'practice:choice_detail_submit' %}",
+                    data: {'user_answer': num, 'practice_num':cur_question_num,'practice_bank_id':{{ practice_bank_id }}},
+                    async: true,
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                    },
+                    success: function (data) {
+                        console.log(data)
+                        if(data.msg=='提交成功')
+                            window.location.href = "{% url 'practice:practice_choice_result' practice_bank_id %}";
+                        else
+                            $("#show_detail").innerHTML = '请选择一个答案'
+                    }
+                })
+            });
+            //  点击下一题
+            $("#next").on("click", function () {
+                //  num是选择的答案的序号
+                var num = $(".choose").index();
+
+                var cur_question_num = {{ question.question_num }};
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "{% url 'practice:choice_detail_submit' %}",
+                    data: {'user_answer': num, 'practice_num':cur_question_num,'practice_bank_id':{{ practice_bank_id }}},
+                    async: true,
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                    },
+                   success: function (data) {
+
+                        if(data.status=='success')
+                            window.location.href = "{% url 'practice:practice_choice_result' practice_bank_id %}";
+                        else
+                            $("#show_detail").text('请选择一个答案')
+                    }
+                })
+            })
+        })
+    </script>
+{% endblock %}

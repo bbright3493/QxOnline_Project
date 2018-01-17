@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block custom_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/question.css' %}"/>
+{% endblock %}
+
+{% block custom_js %}
+<script src="jquery.min.js" charset="utf-8"></script>
+<script>
+    $(function(){
+    //  选择某个选项
+      $("#choices li").on("click",function(){
+        $(this).addClass('choose').siblings().removeClass('choose')
+      });
+    //  点击收藏
+      $("#collect").on("click",function(){
+        $(this).toggleClass("collectok")
+      })
+    //  点击提前交卷
+      $("#submit").on("click",function(){
+        //  num是选择的答案的序号
+        var num = $(".choose").index();
+        $.ajax({
+          url: '', // 需要提交的网址
+          data: {choice:num},
+          success: function(){}
+        })
+      });
+    //  点击下一题
+      $("#next").on("click",function(){})
+    })
+</script>
+
+{% endblock %}
+
+{% block title %}
+    选择题
+{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul  class="crumbs">
+                <li><a href="/">首页</a>></li>
+                <li>在线选择题</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+{% block content %}
+<section>
+	<div class="wp">
+
+                <header><i></i>[单选题]</header>
+                <div class="question">
+                    <div class="title">下面有关jquery事件的相应，描述错误的是？</div>
+                    <ul class="choices" id="choices">
+                        <li><i></i>onclick 鼠标点击某个对象</li>
+                        <li><i></i>onfocus 元素失去焦点</li>
+                        <li><i></i>onload 是某个页面的css js html 文档结构和图像被完全加载</li>
+                        <li><i></i>onmousedown 某个鼠标按键被按下</li>
+                    </ul>
+                    <div class="collect" id="collect"><i></i>收藏本题</div>
+                    <div class="button-group">
+                        <button class="submit" id="submit">提前交卷</button>
+                        <button class="next" id="next">下一题</button>
+                    </div>
+                </div>
+
+</div>
+</section>
+{% endblock %}

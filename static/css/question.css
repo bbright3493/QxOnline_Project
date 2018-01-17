@@ -1,0 +1,134 @@
+.question-wrapper{
+    width: 958px;
+    margin: 0 auto;
+    background: #fff;
+    color: #333;
+}
+/* 标题部分 */
+.question-wrapper header{
+    height: 24px;
+    padding: 15px 20px 15px 55px;
+    background: url(../img/q-ico.png)no-repeat 20px 16px;
+    border-bottom: 1px solid #eee;
+}
+.question{
+    padding: 20px;
+}
+/* 题目部分 */
+.title{
+    font-size: 14px;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+/* 选项部分 */
+.choices{
+    padding: 0;
+}
+.choices li{
+    border: 1px solid #d4d4d4;
+    border-radius: 2px;
+    padding: 12px 44px 13px;
+    background: #FFF;
+    margin-bottom: 20px;
+    list-style: none;
+    position: relative;
+    cursor: pointer;
+}
+.choices li i{
+    display: inline-block;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    height: 14px;
+    width: 14px;
+    position: absolute;
+    top: 16px;
+    left: 20px;
+}
+/* 鼠标滑过选项样式 */
+.choices li:hover{
+    border-color: rgb(26, 188, 156);
+    color: rgb(26, 188, 156);
+}
+.choices li:hover i{
+    border-color: rgb(26, 188, 156);
+}
+/* 选项选中样式 */
+.choices .choose{
+    border-color: rgb(26, 188, 156);
+    color: rgb(26, 188, 156);
+}
+.choices .choose i{
+    border-color: rgb(26, 188, 156);
+}
+.choices .choose i:after{
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    width: 8px;
+    height: 8px;
+    background: rgb(26, 188, 156);
+    border-radius: 50%;
+}
+/* 收藏 */
+.collect{
+    float: left;
+    margin-top: 13px;
+    width: 72px;
+    padding-left: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 20px;
+    vertical-align: middle;
+}
+.collect i{
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    background: url(../img/icon-subject.png)no-repeat;
+    background-position: -79px 0;
+}
+/* 鼠标滑过收藏的效果 */
+.collect:hover{
+    color: rgb(26, 188, 156);
+}
+.collect:hover i{
+    background-position: -111px -16px;
+}
+/* 点击收藏后 */
+.question .collectok{
+    color: rgb(26, 188, 156);
+}
+.question .collectok i{
+    background-position: -111px -16px;
+}
+/* 提交按钮部分 */
+.button-group{
+    float: right;
+}
+.button-group button{
+    margin-right: 10px;
+    width: 110px;
+    height: 39px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    border: none;
+    outline: none;
+    color: #fff;
+    cursor: pointer;
+}
+.submit{
+    background-color: #ff6547;
+}
+/* 鼠标滑过提交部分的效果 */
+.submit:hover{
+    background-color: #EC7063;
+}
+.next{
+    background-color: rgb(26, 188, 156);
+}
+.next:hover{
+    background: #00B091;
+}
