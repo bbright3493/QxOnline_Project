@@ -1,194 +1,127 @@
 {% extends 'base.html' %}
-{% block title %}公开课列表 - 趣学在线网{% endblock %}
+{% block title %}选择题详情页 - 趣学在线网{% endblock %}
 {% load staticfiles %}
+{% block custom_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/question.css' %}"/>
+{% endblock %}
 {% block custom_bread %}
     <section>
-	<div class="wp">
-		<div class="crumbs">
-			<ul>
-				<li><a href="/">首页</a>></li>
-                <li><a href="{% url 'course:course_list' %}">公开课程</a>></li>
-				<li>课程详情</li>
-			</ul>
-		</div>
-	</div>
-</section>
+        <div class="wp">
+            <div class="crumbs">
+                <ul>
+                    <li><a href="/">首页</a>></li>
+                    <li><a href="{% url 'practice:practice_list' %}">在线练习</a>></li>
+                    <li><a href="{% url 'practice:practice_bank_detail' question_bank.id %}">题库详情</a>></li>
+                    <li>开始练习-编程题</li>
+                </ul>
+            </div>
+        </div>
+    </section>
 {% endblock %}
 
 
 {% block content %}
+
     <section>
-	<div class="wp">
-		<div class="groupPurchase_detail detail">
-			<div class="toppro">
-				<div class="left">
-					<div class="picbox">
-						<div class="tb-booth tb-pic">
-							<img width="440" height="445" src="{{ MEDIA_URL }}{{ course.image }}" class="jqzoom" />
-						</div>
+        <div class="wp">
 
-					</div>
-					<div class="des">
-						<h1 title="django 从入门到精通体验开始了">{{ course.name }}</h1>
-						<span class="key">{{ course.desc }}</span>
-						<div class="prize">
-							<span class="fl">难度：<i class="key">{{ course.get_degree_display }}</i></span>
-							<span class="fr">学习人数：{{ course.students }}</span>
-						</div>
-						<ul class="parameter">
-							<li><span class="pram word3">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长：</span><span>{{ course.learn_times }}</span></li>
-                            <li><span class="pram word3">章&nbsp;节&nbsp;数：</span><span>{{ course.get_zj_nums }}</span></li>
-                            <li><span class="pram word3">课程类别：</span><span title="">{{ course.category }}</span></li>
-							<li class="piclist"><span class="pram word4">学习用户：</span>
-                                {% for user_course in course.get_learn_users %}
-                                    <span class="pic"><img width="40" height="40" src="{{ MEDIA_URL }}{{ user_course.user.image }}"/></span>
-                                {% endfor %}
-							</li>
-						</ul>
-						<div class="btns">
-							<div class="btn colectgroupbtn"  id="jsLeftBtn">
-                                  {% if has_fav_course %}已收藏{% else %}收藏{% endif %}
-                            </div>
-                                <div class="buy btn"><a style="color: white" href="{% url 'course:course_info' course.id %}">开始学习</a></div>
-						</div>
-					</div>
-                    <div class="group-share-box">
-                        <div class="bdsharebuttonbox"
-                             data-text="django开始了"
-                             data-desc="我在#慕课网#发现了"
-                             data-comment=""
-                             data-url="/group/groupdetail/15/">
-                            <span class="fl">分享到：</span>
-                            <a href="#" class="bds_more" data-cmd="more"></a>
-                            <a title="分享到QQ空间" href="#" class="bds_qzone" data-cmd="qzone"></a>
-                            <a title="分享到新浪微博" href="#" class="bds_tsina" data-cmd="tsina"></a>
-                            <a title="分享到腾讯微博" href="#" class="bds_tqq" data-cmd="tqq"></a>
-                            <a title="分享到人人网" href="#" class="bds_renren" data-cmd="renren"></a>
-                            <a title="分享到微信" href="#" class="bds_weixin" data-cmd="weixin"></a>
-                        </div>
-                    </div>
-				</div>
-				<div class="right">
-					<div class="head">
-						<h1>授课机构</h1>
-						<p>世界名校，课程权威</p>
-					</div>
-					<div class="pic">
-                        <a href="/company/14/">
-                            <img width="150" height="80" src="{{ MEDIA_URL }}{{ course.course_org.image }}"/>
-                        </a>
-                    </div>
-					<a href="/company/14/">
-                        <h2 class="center" title="清华大学">{{ course.course_org.name }}</h2>
-                    </a>
-					<div class="btn  notlogin
-					     "data-favid="14" id="jsRightBtn">
-                         {% if has_fav_org %}已收藏{% else %}收藏{% endif %}
-                    </div>
-					<div class="clear">
-						<ul>
-                            <li>
-                                <span>课 &nbsp;程&nbsp; 数：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   {{ course.course_org.course_nums }}</span>
-                            </li>
-                            <li>
-                                <span>教 &nbsp;师&nbsp; 数：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {{ course.course_org.get_teacher_nums }}</span>
-                            </li>
-							<li>所在地区：&nbsp;&nbsp;{{ course.course_org.address }}</li>
-							<li>认&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;证&nbsp;:
-                                &nbsp;&nbsp;
-								    <img title="金牌机构", src="{% static 'images/gold.png' %}"/>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-    <section>
-	<div class="wp">
-		<div class="list groupPurchase_detail_pro">
-			<div class="left layout">
-				<div class="head">
-					<ul class="tab_header">
-						<li class="active">课程详情</li>
-					</ul>
-				</div>
-				<div class="tab_cont tab_cont1">
-                    {% autoescape off %}
-					{{ course.detail }}
-                    {% endautoescape %}
-				</div>
-				<div class="tab_cont tab_cont2" >
-					<div class="comment">
-						<div class="comenlist">
+            <div class="question">
+                <div class="title">{{ question.question_num }}:&nbsp{{ question.question_content }}</div>
 
-	                    </div>
-					</div>
-				</div>
-			</div>
-			<div class="right layout">
-				<div class="head">相关课程推荐</div>
-                <div class="group_recommend">
-                    {% for relate_course in relate_coures %}
-                        <dl>
-                            <dt>
-                                <a target="_blank" href="">
-                                    <img width="240" height="220" class="scrollLoading" src="{{ MEDIA_URL }}{{ relate_course.image }}"/>
-                                </a>
-                            </dt>
-                            <dd>
-                                <a target="_blank" href=""><h2> {{ relate_course.name }}</h2></a>
-                                <span class="fl">学习时长：<i class="key">{{ relate_course.learn_times }}</i></span>
-                            </dd>
-                        </dl>
-                    {% endfor %}
+                <img width="400" height="240" class="scrollLoading" data-url="{{ MEDIA_URL }}{{ question.image }}"/>
 
+                <div style="color:#F00" id="show_detail"></div>
+                <div class="collect" id="collect"><i></i>收藏本题</div>
+                <div class="button-group">
+                    {% if is_last_question %}
+                        <button class="questiontips" id="questiontips">查看解题思路</button>
+                        <button class="submit" id="submit">我已完成</button>
+                    {% else %}
+                        <button class="submit" id="submit">提前交卷</button>
+                        <button class="next" id="next">下一题</button>
+                        <button class="download" id="download">参考源码下载</button>
+                        <button class="video" id="video">观看讲解视频</button>
+                        <button class="comment" id="comment">提交代码 请老师点评</button>
+                    {% endif %}
 
                 </div>
-			</div>
-		</div>
-	</div>
-</section>
+
+            </div>
+
+        </div>
+    </section>
+
 {% endblock %}
 
+
 {% block custom_js %}
-<script type="text/javascript">
-//收藏分享
-function add_fav(current_elem, fav_id, fav_type){
-    $.ajax({
-        cache: false,
-        type: "POST",
-        url:"{% url "org:add_fav" %}",
-        data:{'fav_id':fav_id, 'fav_type':fav_type},
-        async: true,
-        beforeSend:function(xhr, settings){
-            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-        },
-        success: function(data) {
-            if(data.status == 'fail'){
-                if(data.msg == '用户未登录'){
-                    window.location.href="/login/";
-                }else{
-                    alert(data.msg)
-                }
 
-            }else if(data.status == 'success'){
-                current_elem.text(data.msg)
-            }
-        },
-    });
-}
+    <script src="{% static 'js/jquery.min.js' %}" charset="utf-8"></script>
+    <script>
+        $(function () {
+            //  选择某个选项
+            $("#choices li").on("click", function () {
+                $(this).addClass('choose').siblings().removeClass('choose')
+            });
+            //  点击收藏
+            $("#collect").on("click", function () {
+                $(this).toggleClass("collectok")
+            })
+            //  点击提前交卷或者交卷
+            $("#submit").on("click", function () {
+                //  num是选择的答案的序号
+                var num = $(".choose").index();
+                var cur_question_num = {{ question.question_num }};
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "{% url 'practice:choice_detail_submit' %}",
+                    data: {
+                        'user_answer': num,
+                        'practice_num': cur_question_num,
+                        'practice_bank_id':{{ practice_bank_id }}
+                    },
+                    async: true,
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                    },
+                    success: function (data) {
+                        console.log(data)
+                        if (data.msg == '提交成功')
+                            window.location.href = "{% url 'practice:practice_choice_result' practice_bank_id %}";
+                        else
+                            $("#show_detail").innerHTML = '请选择一个答案'
+                    }
+                })
+            });
+            //  点击下一题
+            $("#next").on("click", function () {
+                //  num是选择的答案的序号
+                var num = $(".choose").index();
 
-$('#jsLeftBtn').on('click', function(){
-    add_fav($(this), {{ course.id }}, 1);
-});
+                var cur_question_num = {{ question.question_num }};
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "{% url 'practice:choice_detail_submit' %}",
+                    data: {
+                        'user_answer': num,
+                        'practice_num': cur_question_num,
+                        'practice_bank_id':{{ practice_bank_id }}
+                    },
+                    async: true,
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                    },
+                    success: function (data) {
 
-$('#jsRightBtn').on('click', function(){
-    add_fav($(this), {{ course.course_org.id }}, 2);
-});
-
-
-</script>
-
+                        if (data.status == 'success')
+                            window.location.href = "{% url 'practice:practice_choice_result' practice_bank_id %}";
+                        else
+                            $("#show_detail").text('请选择一个答案')
+                    }
+                })
+            })
+        })
+    </script>
 {% endblock %}
