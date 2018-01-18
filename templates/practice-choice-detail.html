@@ -107,7 +107,7 @@
                    success: function (data) {
 
                         if(data.status=='success')
-                            window.location.href = "{% url 'practice:practice_choice_result' practice_bank_id %}";
+                            window.location.href = "{% url 'practice:practice_choice_detail' practice_bank_id next_practice_num %}";
                         else
                             $("#show_detail").text('请选择一个答案')
                     }

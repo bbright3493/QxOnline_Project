@@ -27,22 +27,25 @@
 
             <div class="question">
                 <div class="title">{{ question.question_num }}:&nbsp{{ question.question_content }}</div>
+                <div>{% if question.is_comment %}老师可点评{% endif %}&nbsp{% if question.download %}源码下载{% endif %}&nbsp
+                    {% if question.url %}提供讲解视频{% endif %}</div>
 
-                <img width="400" height="240" class="scrollLoading" data-url="{{ MEDIA_URL }}{{ question.image }}"/>
+
+                <img width="440" height="300" src="{{ MEDIA_URL }}{{ question.image }}"/>
 
                 <div style="color:#F00" id="show_detail"></div>
                 <div class="collect" id="collect"><i></i>收藏本题</div>
                 <div class="button-group">
-                    {% if is_last_question %}
-                        <button class="questiontips" id="questiontips">查看解题思路</button>
-                        <button class="submit" id="submit">我已完成</button>
-                    {% else %}
-                        <button class="submit" id="submit">提前交卷</button>
-                        <button class="next" id="next">下一题</button>
-                        <button class="download" id="download">参考源码下载</button>
-                        <button class="video" id="video">观看讲解视频</button>
-                        <button class="comment" id="comment">提交代码 请老师点评</button>
-                    {% endif %}
+
+                    <button class="questiontips" id="questiontips">查看解题思路</button>
+                    <button class="submit" id="submit">我已完成</button>
+
+                    <button class="complete" id="complete" style="display:none;">提前交卷</button>
+                    <button class="next" id="next" style="display:none;">下一题</button>
+                    <button class="download" id="download" style="display:none;">参考源码下载</button>
+                    <button class="video" id="video" style="display:none;">观看讲解视频</button>
+                    <button class="comment" id="comment" style="display:none;">提交代码 请老师点评</button>
+
 
                 </div>
 
@@ -67,32 +70,14 @@
             $("#collect").on("click", function () {
                 $(this).toggleClass("collectok")
             })
-            //  点击提前交卷或者交卷
+            //  点击我已完成
             $("#submit").on("click", function () {
-                //  num是选择的答案的序号
-                var num = $(".choose").index();
-                var cur_question_num = {{ question.question_num }};
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "{% url 'practice:choice_detail_submit' %}",
-                    data: {
-                        'user_answer': num,
-                        'practice_num': cur_question_num,
-                        'practice_bank_id':{{ practice_bank_id }}
-                    },
-                    async: true,
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-                    },
-                    success: function (data) {
-                        console.log(data)
-                        if (data.msg == '提交成功')
-                            window.location.href = "{% url 'practice:practice_choice_result' practice_bank_id %}";
-                        else
-                            $("#show_detail").innerHTML = '请选择一个答案'
-                    }
-                })
+                //点击该按钮后 显示完成后用户可以看到的按钮
+                $('#complete').show();
+                $('#next').show();
+                $('#download').show();
+                $('#video').show();
+                $('#comment').show();
             });
             //  点击下一题
             $("#next").on("click", function () {
@@ -117,8 +102,7 @@
 
                         if (data.status == 'success')
                             window.location.href = "{% url 'practice:practice_choice_result' practice_bank_id %}";
-                        else
-                            $("#show_detail").text('请选择一个答案')
+
                     }
                 })
             })

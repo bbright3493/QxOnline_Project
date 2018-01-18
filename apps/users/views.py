@@ -91,11 +91,11 @@ class LoginView(View):
     def get(self, request):
         return render(request, "login.html", {})
     def post(self, request):
-        login_form = LoginForm(request.POST)
-        if login_form.is_valid():
-            user_name = request.POST.get("username", "")
-            pass_word = request.POST.get("password", "")
-            user = authenticate(username=user_name, password=pass_word)
+        login_form = LoginForm(request.POST) #获取表单对象
+        if login_form.is_valid(): #表单是否合法
+            user_name = request.POST.get("username", "")#获取用户名
+            pass_word = request.POST.get("password", "")#获取密码
+            user = authenticate(username=user_name, password=pass_word)#查询用户名是否对应该密码
             if user is not None:
                 if user.is_active:
                     login(request, user)

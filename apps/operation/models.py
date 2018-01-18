@@ -7,7 +7,7 @@ from django.db import models
 
 from users.models import UserProfile
 from courses.models import Course
-from onlinepractice.models import ChoiceQuestion
+from onlinepractice.models import ChoiceQuestion, ProgramQuestion
 
 # Create your models here.
 
@@ -75,4 +75,8 @@ class UserErrorQuestion(models.Model):
         verbose_name = u'用户错题'
         verbose_name_plural = verbose_name
 
+class UserUploadProgram(models.Model):
+    user = models.ForeignKey(UserProfile, verbose_name=u"用户")
+    program = models.ForeignKey(ProgramQuestion, verbose_name=u'编程题')
+    upload = models.FileField(upload_to="onlinepractice/upload/%Y/%m", verbose_name=u"用户源码", max_length=100, default='')
 

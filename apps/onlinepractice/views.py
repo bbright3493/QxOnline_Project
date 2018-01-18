@@ -23,7 +23,7 @@ class QuestionBankView(View):
             page = request.GET.get('page', 1)
         except PageNotAnInteger:
             page = 1
-        p = Paginator(question_banks, 2, request=request)
+        p = Paginator(question_banks, 6, request=request)
 
         question_banks = p.page(page)
 

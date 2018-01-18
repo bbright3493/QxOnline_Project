@@ -46,10 +46,12 @@ class QuestionBank(models.Model):
 class ProgramQuestion(models.Model):
     question_num = models.IntegerField(verbose_name=u'题目编号')
     question_content = models.CharField(max_length=500, verbose_name=u'题目内容')
-    download = models.FileField(upload_to="course/resource/%Y/%m", verbose_name=u"源码文件", max_length=100)
+    download = models.FileField(upload_to="onlinepractice/download/%Y/%m", verbose_name=u"源码文件", max_length=100, default='')
     url = models.CharField(max_length=200, default="", verbose_name=u"题目讲解视频地址")
-    essentials = models.CharField(max_length=500, verbose_name=u'题目要点')
+    essentials = models.CharField(max_length=500, verbose_name=u'解题思路')
+    image = models.ImageField(upload_to="onlinepractice/%Y/%m", verbose_name=u"运行结果截图", max_length=100, null=True, blank=True)
     questionBank = models.ForeignKey("QuestionBank", verbose_name=u'所属题库', blank=True, null=True)
+    is_comment = models.BooleanField(default=False, verbose_name=u'是否提供点评')
 
     class Meta:
         verbose_name = u'编程题'
