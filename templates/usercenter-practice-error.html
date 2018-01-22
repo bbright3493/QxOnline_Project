@@ -1,5 +1,5 @@
 {% extends 'usercenter-base.html' %}
-{% block title %}我的收藏- 趣学在线网{% endblock %}
+{% block title %}我的错题集-我的作业- 趣学在线网{% endblock %}
 {% load staticfiles %}
 {% block custom_bread %}
     <section>
@@ -23,20 +23,18 @@
             <div class="personal_des permessage">
                 <div class="head">
                     <ul class="tab_header messagehead">
-                        <li><a href="{% url 'users:myfav_org' %}">作业统计</a> </li>
-                        <li class="active"><a href="{% url 'users:myfav_course' %}">错题集</a></li>
-                        <li><a href="{% url 'users:myfav_teacher' %}">提交点评</a></li>
+                        <li><a href="{% url 'users:my_practice_count' %}">作业统计</a> </li>
+                        <li class="active"><a href="{% url 'users:my_practice_error' %}">错题集</a></li>
+                        <li><a href="{% url 'users:my_practice_comment' %}">作业点评</a></li>
 
                     </ul>
 
                 </div>
                 <div class="companycenter">
                     <div class="group_list brief">
-                        {% for fav_course in course_list %}
+                        {% for error_question in error_questions %}
                         <div class="module1_5 box">
-                            <a href="{% url 'course:course_detail' fav_course.id %}">
-                                <img width="214" height="190" src="{{ MEDIA_URL }}{{ fav_course.image }}"/>
-                            </a>
+
                             <div class="des">
                                 <a href="{% url 'course:course_detail' fav_course.id %}"><h2>{{ fav_course.name }}</h2></a>
                                 <span class="fl">时长：<i class="key">{{ fav_course.learn_times }}</i></span>

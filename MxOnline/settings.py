@@ -91,20 +91,32 @@ TEMPLATES = [
 WSGI_APPLICATION = 'MxOnline.wsgi.application'
 
 USE_LOCAL_DATABASE = True
+USE_MAC = False
 
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 if USE_LOCAL_DATABASE:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': "mxonline_1",
-            'USER': 'root',
-            'PASSWORD': "bb12345",
-            'HOST': "127.0.0.1"
+    if USE_MAC:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME': "mxonline_1",
+                'USER': 'root',
+                'PASSWORD': "bb12345",
+                'HOST': "127.0.0.1"
+            }
         }
-    }
+    else:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME': "mxonline_1",
+                'USER': 'root',
+                'PASSWORD': "",
+                'HOST': "127.0.0.1"
+            }
+        }
 else:
     DATABASES = {
         'default': {

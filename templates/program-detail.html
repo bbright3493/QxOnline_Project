@@ -94,7 +94,7 @@
             })
             //  点击
             $("#complete").on("click", function () {
-                window.location.href = "{% url 'practice:program_result' practice_bank_id  %}";
+                window.location.href = "{% url 'practice:program_result' practice_bank_id question.question_num %}";
             })
         })
     </script>

@@ -85,23 +85,27 @@ class UserUploadProgram(models.Model):
 class UserPractice(models.Model):
     user = models.ForeignKey(UserProfile, verbose_name=u"用户")
     practice_bank_id = models.IntegerField(default=0, verbose_name=u'题库id')
-    practice_id = models.IntegerField(default=0, verbose_name=u'已完成最后题目id')
-    practice_bank_correct_persent = models.IntegerField(default=0, verbose_name=u'题库正确率')
-
+    practice_num = models.IntegerField(default=0, verbose_name=u'已完成最后题目题号')
+    practice_bank_correct_percent = models.IntegerField(default=0, verbose_name=u'题库正确率')
 
     class Meta:
         verbose_name = u'用户作业情况'
         verbose_name_plural = verbose_name
 
-
+    def get_practice_bank(self):
+        practice_bank = QuestionBank.objects.get(id=self.practice_bank_id)
+        return practice_bank
 
     def get_complete_persent(self):
         #通过题目获取题库的完成度
-        #获取题库的题目数
         practice_bank = QuestionBank.objects.get(id=self.practice_bank_id)
         if practice_bank.type == 'bct':
-            question_num = practice_bank.choicequestion_set.count()
+            question_count = practice_bank.programquestion_set.count()
         else:
-            question_num = practice_bank.programquestion_set.count()
+            question_count = practice_bank.choicequestion_set.count()
+
+        complete_percent = self.practice_num*100/question_count
+        return complete_percent
+
 
 

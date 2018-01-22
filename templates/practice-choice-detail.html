@@ -83,7 +83,7 @@
                     success: function (data) {
                         console.log(data)
                         if(data.msg=='提交成功')
-                            window.location.href = "{% url 'practice:practice_choice_result' practice_bank_id %}";
+                            window.location.href = "{% url 'practice:practice_choice_result' practice_bank_id question.question_num %}";
                         else
                             $("#show_detail").innerHTML = '请选择一个答案'
                     }

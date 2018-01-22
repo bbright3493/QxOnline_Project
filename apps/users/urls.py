@@ -4,7 +4,8 @@ __author__ = 'bobby'
 from django.conf.urls import url, include
 
 from .views import UserinfoView, UploadImageView, UpdatePwdView, SendEmailCodeView
-from .views import UpdateEmailView, MyCourseView, MyFavOrgView, MyFavTeacherView, MyFavCourseView, MymessageView
+from .views import UpdateEmailView, MyCourseView, MyFavOrgView, MyFavTeacherView, MyFavCourseView, MymessageView, \
+    MyPracticeCount, MyPracticeComment, MyPracticeErrors
 
 
 urlpatterns = [
@@ -37,4 +38,10 @@ urlpatterns = [
 
     #我的消息
     url(r'^mymessage/$', MymessageView.as_view(), name="mymessage"),
+    #我的作业统计
+    url(r'^mypractice/count/$', MyPracticeCount.as_view(), name="my_practice_count"),
+    #我的提交点评
+    url(r'^mypractice/commnet/$', MyPracticeComment.as_view(), name="my_practice_comment"),
+    #我的错题集
+    url(r'^mypractice/error/$', MyPracticeErrors.as_view(), name="my_practice_error"),
 ]
