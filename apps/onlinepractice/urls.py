@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^program_detail/(?P<practice_bank_id>\d+)/(?P<practice_num>\d+)/$', ProgramDetailView.as_view(), name='program_detail'),
     url(r'^choice_detail_submit/$', PracticeChoiceSubmit.as_view(), name='choice_detail_submit'),
     url(r'^choice_result/(?P<practice_bank_id>\d+)/$', PracticeChoiceResult.as_view(), name='practice_choice_result'),
+    url(r'^program_result/(?P<practice_bank_id>\d+)/$', ProgramResult.as_view(), name='program_result'),
 
 ]

@@ -9,6 +9,7 @@ import json
 from django.views.generic.base import View
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from operation.models import UserErrorQuestion
+from utils.mixin_utils import LoginRequiredMixin
 # Create your views here.
 
 class QuestionBankView(View):
@@ -99,13 +100,25 @@ class PracticeChoiceResult(View):
         return render(request, 'practice-choice-result.html', locals())
 
 
-class ProgramDetailView(View):
+class ProgramDetailView(LoginRequiredMixin, View):
     '''
     编程题详情页
     '''
     def get(self, request, practice_bank_id, practice_num):
+
+        is_last_question = False
         question_bank = QuestionBank.objects.get(id=practice_bank_id)
         question = ProgramQuestion.objects.get(question_num=practice_num, questionBank=question_bank)
+        next_practice_num = str(int(practice_num) + 1)
+        try:
+            next_question = ProgramQuestion.objects.get(question_num=next_practice_num, questionBank=question_bank)
+        except ProgramQuestion.DoesNotExist as e:
+            is_last_question = True
+
         return render(request, 'program-detail.html', locals())
 
 
+class ProgramResult(View):
+    def get(self, request, practice_bank_id):
+        question_bank = QuestionBank.objects.get(id=practice_bank_id)
+        return render(request, 'program-result.html', locals())

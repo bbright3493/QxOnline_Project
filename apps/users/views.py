@@ -16,7 +16,7 @@ from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm, UploadIma
 from .forms import UserInfoForm
 from utils.email_send import send_register_email, send_mail_test
 from utils.mixin_utils import LoginRequiredMixin
-from operation.models import UserCourse, UserFavorite, UserMessage
+from operation.models import UserCourse, UserFavorite, UserMessage, UserErrorQuestion
 from organization.models import CourseOrg, Teacher
 from courses.models import Course
 from .models import Banner
@@ -299,6 +299,32 @@ class MyFavCourseView(LoginRequiredMixin, View):
         })
 
 
+class MyPracticeErrors(LoginRequiredMixin, View):
+    '''
+    我的错题集
+    '''
+    def get(self, request):
+        error_question = UserErrorQuestion.objects.filter(user=request.user)
+        return render(request, 'usercenter-practice-error.html', locals())
+
+
+class MyPracticeCount(LoginRequiredMixin, View):
+    '''
+    我的作业统计
+    '''
+    def get(self, request):
+        return render(request, 'usercenter-practice-count.html', locals())
+
+
+class MyPracticeComment(LoginRequiredMixin, View):
+    '''
+    我的提交点评
+    '''
+    def get(self, request):
+        return render(request, 'usercenter-practice-comment.html', locals())
+
+
+
 class MymessageView(LoginRequiredMixin, View):
     """
     我的消息
@@ -340,6 +366,9 @@ class IndexView(View):
             'banner_courses':banner_courses,
             'course_orgs':course_orgs
         })
+
+
+
 
 
 def page_not_found(request):

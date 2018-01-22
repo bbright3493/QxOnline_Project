@@ -7,7 +7,7 @@ from django.db import models
 
 from users.models import UserProfile
 from courses.models import Course
-from onlinepractice.models import ChoiceQuestion, ProgramQuestion
+from onlinepractice.models import ChoiceQuestion, ProgramQuestion, QuestionBank
 
 # Create your models here.
 
@@ -75,8 +75,33 @@ class UserErrorQuestion(models.Model):
         verbose_name = u'用户错题'
         verbose_name_plural = verbose_name
 
+
 class UserUploadProgram(models.Model):
     user = models.ForeignKey(UserProfile, verbose_name=u"用户")
     program = models.ForeignKey(ProgramQuestion, verbose_name=u'编程题')
     upload = models.FileField(upload_to="onlinepractice/upload/%Y/%m", verbose_name=u"用户源码", max_length=100, default='')
+
+
+class UserPractice(models.Model):
+    user = models.ForeignKey(UserProfile, verbose_name=u"用户")
+    practice_bank_id = models.IntegerField(default=0, verbose_name=u'题库id')
+    practice_id = models.IntegerField(default=0, verbose_name=u'已完成最后题目id')
+    practice_bank_correct_persent = models.IntegerField(default=0, verbose_name=u'题库正确率')
+
+
+    class Meta:
+        verbose_name = u'用户作业情况'
+        verbose_name_plural = verbose_name
+
+
+
+    def get_complete_persent(self):
+        #通过题目获取题库的完成度
+        #获取题库的题目数
+        practice_bank = QuestionBank.objects.get(id=self.practice_bank_id)
+        if practice_bank.type == 'bct':
+            question_num = practice_bank.choicequestion_set.count()
+        else:
+            question_num = practice_bank.programquestion_set.count()
+
 

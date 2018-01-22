@@ -22,35 +22,46 @@
 
 {% block content %}
 
-    <section>
+    <section style="min-height: 350px;overflow: auto;font-size: 16px">
         <div class="wp">
 
             <div class="question">
-                <div class="title">{{ question.question_num }}:&nbsp{{ question.question_content }}</div>
-                <div>{% if question.is_comment %}老师可点评{% endif %}&nbsp{% if question.download %}源码下载{% endif %}&nbsp
-                    {% if question.url %}提供讲解视频{% endif %}</div>
 
+
+                <div class="title"
+                     style="font-size: 16px">{{ question.question_num }}:&nbsp;{{ question.question_content }}</div>
+                <div style="padding: 10px 0 20px 0">&nbsp;
+                    {% if question.is_comment %}
+                        <div style="font-size: 18px;color: blue">老师可点评</div>{% endif %}
+                    {% if question.download %}
+                        <div style="font-size: 18px;color: blue">源码下载</div>{% endif %}
+                    {% if question.url %}
+                        <div style="font-size: 18px;color: blue">提供讲解视频</div>{% endif %}
+                </div>
 
                 <img width="440" height="300" src="{{ MEDIA_URL }}{{ question.image }}"/>
 
-                <div style="color:#F00" id="show_detail"></div>
-                <div class="collect" id="collect"><i></i>收藏本题</div>
-                <div class="button-group">
-
-                    <button class="questiontips" id="questiontips">查看解题思路</button>
-                    <button class="submit" id="submit">我已完成</button>
-
-                    <button class="complete" id="complete" style="display:none;">提前交卷</button>
-                    <button class="next" id="next" style="display:none;">下一题</button>
-                    <button class="download" id="download" style="display:none;">参考源码下载</button>
-                    <button class="video" id="video" style="display:none;">观看讲解视频</button>
-                    <button class="comment" id="comment" style="display:none;">提交代码 请老师点评</button>
-
-
+                <div style="padding: 10px 0">
+                    <div style="color:#F00" id="show_detail"></div>
+                    <div class="collect" id="collect"><i></i>收藏本题</div>
+                    <div class="button-group" style="margin:0 0 0 -100px">
+                        <button class="questiontips" id="questiontips" style="background: #ff8b3d">查看解题思路</button>
+                        <button class="submit" id="submit">我已完成</button>
+                        {% if is_last_question %}
+                           <button class="complete" id="complete" style="display:none;;background: goldenrod">完成交卷</button>
+                        {% else %}
+                            <button class="complete" id="complete" style="display:none;background: goldenrod">提前交卷
+                            </button>
+                            <button class="next" id="next" style="display:none;">下一题</button>
+                        {% endif %}
+                        <button class="download" id="download" style="display:none;background: darkorange">参考源码下载
+                        </button>
+                        <button class="video" id="video" style="display:none;background: goldenrod">观看讲解视频</button>
+                        <button class="comment" id="comment" style="display:none;background: lightskyblue">请老师点评
+                        </button>
+                    </div>
                 </div>
-
             </div>
-
         </div>
     </section>
 
@@ -62,10 +73,6 @@
     <script src="{% static 'js/jquery.min.js' %}" charset="utf-8"></script>
     <script>
         $(function () {
-            //  选择某个选项
-            $("#choices li").on("click", function () {
-                $(this).addClass('choose').siblings().removeClass('choose')
-            });
             //  点击收藏
             $("#collect").on("click", function () {
                 $(this).toggleClass("collectok")
@@ -78,33 +85,16 @@
                 $('#download').show();
                 $('#video').show();
                 $('#comment').show();
+                $('#submit').hide();
+                $('#questiontips').hide();
             });
             //  点击下一题
             $("#next").on("click", function () {
-                //  num是选择的答案的序号
-                var num = $(".choose").index();
-
-                var cur_question_num = {{ question.question_num }};
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "{% url 'practice:choice_detail_submit' %}",
-                    data: {
-                        'user_answer': num,
-                        'practice_num': cur_question_num,
-                        'practice_bank_id':{{ practice_bank_id }}
-                    },
-                    async: true,
-                    beforeSend: function (xhr, settings) {
-                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-                    },
-                    success: function (data) {
-
-                        if (data.status == 'success')
-                            window.location.href = "{% url 'practice:practice_choice_result' practice_bank_id %}";
-
-                    }
-                })
+                window.location.href = "{% url 'practice:program_detail' practice_bank_id next_practice_num %}";
+            })
+            //  点击
+            $("#complete").on("click", function () {
+                window.location.href = "{% url 'practice:program_result' practice_bank_id  %}";
             })
         })
     </script>

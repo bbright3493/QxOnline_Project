@@ -21,20 +21,11 @@
 
 
 {% block content %}
-
     <section style="font-size: 18px;min-height: 350px;overflow: auto">
         <div class="wp">
             <p>{{ question_bank.name }}</p>
-
-            <p style="padding: 25px 0;color: red;font-size: 23px">得分：{{ socer }}</p>
-            <p style="color: red;font-size: 23px">正确率：{{ correct_persent }}%</p>
-            {% ifequal correct_persent 100 %}
-                <p style="padding: 25px 0 25px 0">恭喜你 全部答对 学的棒棒哒</p>
-                <img src="{% static 'images/smile.jpeg' %}" alt="得分图片" style="height: 50px;padding: 20px 0">
-            {% else %}
-                <p style="padding: 25px 0 25px 0">没有全部答对哦 我们会自动收集你的错题 请前往个人中心 我的错题页中查看题目内容 答案和解析</p>
-                <img src="{% static 'images/depress.jpeg' %}" alt="得分图片" style="height: 80px;padding: 20px 0">
-            {% endifequal %}
+            <p style="padding: 25px 0;color: red;font-size: 23px">恭喜完成本章编程题练习</p>
+            <p style="color: red;font-size: 23px">业精于勤 荒于嬉(此处数据库中随机获取一条格言进行显示)</p>
         </div>
     </section>
 

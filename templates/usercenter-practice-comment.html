@@ -7,7 +7,7 @@
             <ul  class="crumbs">
                 <li><a href="{% url 'index' %}">首页</a>></li>
                 <li><a href="/user/home/">个人中心</a>></li>
-                <li>我的收藏</li>
+                <li>我的作业</li>
             </ul>
         </div>
     </section>
@@ -17,15 +17,15 @@
     <div class="right" >
             <div class="personal_des Releasecont">
                 <div class="head">
-                    <h1>我的收藏</h1>
+                    <h1>我的作业</h1>
                 </div>
             </div>
             <div class="personal_des permessage">
                 <div class="head">
                     <ul class="tab_header messagehead">
-                        <li><a href="{% url 'users:myfav_org' %}">在线练习</a> </li>
-                        <li><a href="{% url 'users:myfav_teacher' %}">授课教师 </a></li>
-                        <li class="active"><a href="{% url 'users:myfav_course' %}">在线课程</a></li>
+                        <li><a href="{% url 'users:myfav_org' %}">作业统计</a> </li>
+                        <li><a href="{% url 'users:myfav_course' %}">错题集</a></li>
+                        <li class="active"><a href="{% url 'users:myfav_teacher' %}">提交点评</a></li>
                     </ul>
 
                 </div>

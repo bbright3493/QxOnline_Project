@@ -90,19 +90,31 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'MxOnline.wsgi.application'
 
+USE_LOCAL_DATABASE = True
+
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': "mxonline_1",
-        'USER': 'root',
-        'PASSWORD': "",
-        'HOST': "127.0.0.1"
+if USE_LOCAL_DATABASE:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': "mxonline_1",
+            'USER': 'root',
+            'PASSWORD': "bb12345",
+            'HOST': "127.0.0.1"
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': "mxonline_1",
+            'USER': 'root',
+            'PASSWORD': "Bbright841139+",
+            'HOST': "104.225.144.85"
+        }
+    }
 
 
 # Password validation
