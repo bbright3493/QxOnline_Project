@@ -35,13 +35,10 @@
                         {% for error_question in error_questions %}
                         <div >
                             <div class="des">
-                                <a href="{% url 'practice:practice_choice_detail' error_question.question.questionBank.id error_question.question.id %}"><h2>点我查看题目详情</h2></a>
-                                <span class="fl">所属题库：<i class="key">{{ error_question.question.questionBank.name }}</i></span>
-                                <span class="fr">第{{ error_question.question.question_num }}题</span>
-                            </div>
-                            <div class="bottom">
-                                <span class="fl"></span>
-                                <span class="delete-group fr jsDeleteFav_course" data-favid="{{ error_question.id }}"></span>
+                                <a href="{% url 'practice:practice_choice_detail_explain' error_question.question.questionBank.id error_question.question.id %}"><h2>点我查看题目解析</h2></a>
+                                <span class="fl">所属题库：<i class="key"><a href="{% url 'practice:practice_bank_detail' error_question.question.questionBank.id  %}">{{ error_question.question.questionBank.name }}</a></i></span>
+                                <span class="fl">&nbsp;第{{ error_question.question.question_num }}题</span>
+                                <span class="fl">&nbsp;{{ error_question.question.question_content }}</span>
                             </div>
                         </div>
                         {% endfor %}

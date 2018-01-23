@@ -59,6 +59,24 @@ class PracticeChoiceDetailView(View):
             is_last_question = True
         return render(request, 'practice-choice-detail.html', locals())
 
+class PracticeChoiceDetailExplainView(View):
+    '''
+    选择题详情页
+    '''
+    def get(self, request, practice_bank_id, practice_num):
+        is_last_question = False
+        question_bank = QuestionBank.objects.get(id=practice_bank_id)
+        question = ChoiceQuestion.objects.get(question_num=practice_num, questionBank=question_bank)
+        next_practice_num = str(int(practice_num) + 1)
+        if practice_num == '1':
+            #分数清0
+            request.session['user_score'] = 0
+        try:
+            next_question = ChoiceQuestion.objects.get(question_num=next_practice_num, questionBank=question_bank)
+        except ChoiceQuestion.DoesNotExist as e:
+            is_last_question = True
+        return render(request, 'practice-choice-detail_explain.html', locals())
+
 
 class PracticeChoiceSubmit(View):
     def post(self, request):

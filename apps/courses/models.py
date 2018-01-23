@@ -34,6 +34,8 @@ class Course(models.Model):
         verbose_name = u"课程"
         verbose_name_plural = verbose_name
 
+
+
     def get_zj_nums(self):
         #获取课程章节数
         return self.lesson_set.all().count()

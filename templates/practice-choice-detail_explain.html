@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}选择题详情页 - 趣学在线网{% endblock %}
+{% load staticfiles %}
+{% block custom_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/question.css' %}"/>
+{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <div class="crumbs">
+                <ul>
+                    <li><a href="/">首页</a>></li>
+                    <li><a href="{% url 'practice:practice_list' %}">在线练习</a>></li>
+                    <li><a href="{% url 'practice:practice_bank_detail' question_bank.id %}">题库详情</a>></li>
+                    <li>开始练习-选择题</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+
+{% block content %}
+
+    <section style="min-height: 350px;overflow: auto">
+        <div class="wp">
+
+            <div class="question">
+                <div class="title">{{ question.question_num }}:&nbsp{{ question.question_content }}</div>
+                <ul class="choices" id="choices">
+                    <li><i></i>A:{{ question.choiceA }}</li>
+                    <li><i></i>B:{{ question.choiceB }}</li>
+                    <li><i></i>C:{{ question.choiceC }}</li>
+                    <li><i></i>D:{{ question.choiceD }}</li>
+                </ul>
+                <div style="padding: 10px 0 10px 0;color:#F00" id="show_detail">本题答案：{{ question.answer }}</div>
+                <div style="padding: 25px 0 25px 0;color:#F00" id="show_detail">本题解析：{{ question.explain }}</div>
+                <div class="collect" id="collect"><i></i>收藏本题</div>
+                <div class="button-group">
+                        <button class="submit" id="submit">返回我的错题</button>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}
+
+
+{% block custom_js %}
+
+    <script src="{% static 'js/jquery.min.js' %}" charset="utf-8"></script>
+    <script>
+        $(function () {
+
+            //  点击收藏
+            $("#collect").on("click", function () {
+                $(this).toggleClass("collectok")
+            })
+            //  点击提前交卷或者交卷
+            $("#submit").on("click", function () {
+
+                window.location.href = "{% url 'users:my_practice_error'  %}";
+            });
+
+        })
+    </script>
+{% endblock %}
