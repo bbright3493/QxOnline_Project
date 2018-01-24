@@ -16,7 +16,7 @@ from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm, UploadIma
 from .forms import UserInfoForm
 from utils.email_send import send_register_email, send_mail_test
 from utils.mixin_utils import LoginRequiredMixin
-from operation.models import UserCourse, UserFavorite, UserMessage, UserErrorQuestion, UserPractice
+from operation.models import UserCourse, UserFavorite, UserMessage, UserErrorQuestion, UserPractice, UserPracticeComment, UserTeacher
 from organization.models import CourseOrg, Teacher
 from courses.models import Course
 from .models import Banner
@@ -30,6 +30,7 @@ class CustomBackend(ModelBackend):
                 return user
         except Exception as e:
             return None
+
 
 class AciveUserView(View):
     def get(self, request, active_code):
@@ -301,11 +302,20 @@ class MyFavCourseView(LoginRequiredMixin, View):
 
 class MyPracticeErrors(LoginRequiredMixin, View):
     '''
-    我的错题集
+    我的错题集 同时作为老师个人中心的未点评作业查看页
     '''
     def get(self, request):
-        error_questions = UserErrorQuestion.objects.filter(user=request.user)
-        return render(request, 'usercenter-practice-error.html', locals())
+        #查询用户身份是否是老师
+        try:
+            teacher = UserTeacher.objects.get(user=request.user)
+        except UserTeacher.DoesNotExist:
+
+            error_questions = UserErrorQuestion.objects.filter(user=request.user)
+            return render(request, 'usercenter-practice-error.html', locals())
+        else:
+            #查询该老师未点评作业
+            has_comment_practice = UserPracticeComment.objects.filter(teacher=teacher, comment_status=0)
+            return render(request, 'usercenter-practice-error.html', locals())
 
 
 class MyPracticeCount(LoginRequiredMixin, View):
@@ -368,7 +378,6 @@ class IndexView(View):
             'banner_courses':banner_courses,
             'course_orgs':course_orgs
         })
-
 
 
 

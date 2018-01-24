@@ -8,6 +8,8 @@ from django.db import models
 from users.models import UserProfile
 from courses.models import Course
 from onlinepractice.models import ChoiceQuestion, ProgramQuestion, QuestionBank
+from DjangoUeditor.models import UEditorField
+from organization.models import Teacher
 
 # Create your models here.
 
@@ -76,12 +78,6 @@ class UserErrorQuestion(models.Model):
         verbose_name_plural = verbose_name
 
 
-class UserUploadProgram(models.Model):
-    user = models.ForeignKey(UserProfile, verbose_name=u"用户")
-    program = models.ForeignKey(ProgramQuestion, verbose_name=u'编程题')
-    upload = models.FileField(upload_to="onlinepractice/upload/%Y/%m", verbose_name=u"用户源码", max_length=100, default='')
-
-
 class UserPractice(models.Model):
     user = models.ForeignKey(UserProfile, verbose_name=u"用户")
     practice_bank_id = models.IntegerField(default=0, verbose_name=u'题库id')
@@ -108,4 +104,39 @@ class UserPractice(models.Model):
         return complete_percent
 
 
+class UserPracticeComment(models.Model):
+    user = models.ForeignKey(UserProfile, verbose_name=u"用户")
+    program = models.ForeignKey(ProgramQuestion, verbose_name=u'点评的编程题')
+    upload = models.FileField(upload_to="onlinepractice/upload/%Y/%m", verbose_name=u"用户源码", max_length=100, default='')
+    comment = UEditorField(verbose_name=u"老师点评",width=600, height=300, imagePath="operation/ueditor/",
+                                         filePath="operation/ueditor/", default='')
+    level = models.CharField(verbose_name=u"评分等级", choices=(("wm","完美"), ("yx","优秀"), ("lh","良好"), ("hg","合格"),("bhg","不合格")), max_length=8)
+    teacher = models.ForeignKey(Teacher, verbose_name=u"点评讲师", default='no')
+    comment_status = models.IntegerField(choices=((1,"已点评"), (0,"未点评")), default=0, verbose_name=u'是否已经点评')
+
+    class Meta:
+        verbose_name = u'用户的作业点评'
+        verbose_name_plural = verbose_name
+
+
+class UserQuestionTeacher(models.Model):
+    user = models.ForeignKey(UserProfile, verbose_name=u"提问用户")
+    question_content = models.CharField(max_length=1000, default=u'', verbose_name=u'提问内容')
+    teacher = models.ForeignKey(Teacher, verbose_name=u"回答讲师")
+    answer = UEditorField(verbose_name=u"老师回答",width=600, height=300, imagePath="operation/ueditor/",
+                                         filePath="operation/ueditor/", default='')
+    comment_status = models.IntegerField(choices=((1,"已回答"), (0,"未回答")), default=0, verbose_name=u'是否已经回答')
+
+    class Meta:
+        verbose_name = u'用户问题回答'
+        verbose_name_plural = verbose_name
+
+
+class UserTeacher(models.Model):
+    user = models.ForeignKey(UserProfile, verbose_name=u"用户")
+    teacher = models.ForeignKey(Teacher, verbose_name=u"讲师")
+
+    class Meta:
+        verbose_name = u'讲师用户表'
+        verbose_name_plural = verbose_name
 
