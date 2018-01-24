@@ -91,7 +91,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'MxOnline.wsgi.application'
 
 USE_LOCAL_DATABASE = True
-USE_MAC = False
+USE_MAC = True
 
 
 # Database

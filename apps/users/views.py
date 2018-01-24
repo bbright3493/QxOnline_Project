@@ -309,13 +309,12 @@ class MyPracticeErrors(LoginRequiredMixin, View):
         try:
             teacher = UserTeacher.objects.get(user=request.user)
         except UserTeacher.DoesNotExist:
-
             error_questions = UserErrorQuestion.objects.filter(user=request.user)
             return render(request, 'usercenter-practice-error.html', locals())
         else:
-            #查询该老师未点评作业
-            has_comment_practice = UserPracticeComment.objects.filter(teacher=teacher, comment_status=0)
-            return render(request, 'usercenter-practice-error.html', locals())
+            #查询该老师已点评作业
+            comment_practice = UserPracticeComment.objects.filter(teacher=teacher, comment_status=1)
+            return render(request, 'usercenter-practice-teacher-comment.html', locals())
 
 
 class MyPracticeCount(LoginRequiredMixin, View):
@@ -323,9 +322,19 @@ class MyPracticeCount(LoginRequiredMixin, View):
     我的作业统计
     '''
     def get(self, request):
-        user_practice_banks = UserPractice.objects.filter(user=request.user)
+        # 查询用户身份是否是老师
+        try:
+            teacher = UserTeacher.objects.get(user=request.user)
+        except UserTeacher.DoesNotExist:
+            user_practice_banks = UserPractice.objects.filter(user=request.user)
+            return render(request, 'usercenter-practice-count.html', locals())
+        else:
+            # 查询该老师未点评作业
+            comment_practice = UserPracticeComment.objects.filter(teacher=teacher, comment_status=0)
+            return render(request, 'usercenter-practice-teacher-comment.html', locals())
 
-        return render(request, 'usercenter-practice-count.html', locals())
+
+
 
 
 class MyPracticeComment(LoginRequiredMixin, View):

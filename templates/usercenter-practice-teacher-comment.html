@@ -1,0 +1,58 @@
+{% extends 'usercenter-base.html' %}
+{% block title %}我的错题集-我的作业- 趣学在线网{% endblock %}
+{% load staticfiles %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul  class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="/user/home/">个人中心</a>></li>
+                <li>我的作业</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+
+{% block right_content %}
+    <div class="right" >
+            <div class="personal_des Releasecont">
+                <div class="head">
+                    <h1>我的作业</h1>
+                </div>
+            </div>
+            <div class="personal_des permessage">
+                <div class="head">
+                    <ul class="tab_header messagehead">
+                        {% ifequal comment_practice.comment_status 1 %}
+                        <li ><a href="{% url 'users:my_practice_count' %}">待点评作业</a> </li>
+                        <li class="active"><a href="{% url 'users:my_practice_error' %}">已点评作业</a></li>
+                        {% else %}
+                        <li class="active"><a href="{% url 'users:my_practice_count' %}">待点评作业</a> </li>
+                        <li ><a href="{% url 'users:my_practice_error' %}">已点评作业</a></li>
+                        {% endifequal %}
+                        <li><a href="{% url 'users:my_practice_comment' %}">待回答问题</a></li>
+                        <li><a href="{% url 'users:my_practice_comment' %}">已回答问题</a></li>
+
+                    </ul>
+
+                </div>
+                <div class="companycenter">
+                    <div class="group_list brief">
+                        {% for error_question in error_questions %}
+                        <div >
+                            <div class="des">
+                                <a href="{% url 'practice:practice_choice_detail_explain' error_question.question.questionBank.id error_question.question.id %}"><h2>点我查看题目解析</h2></a>
+                                <span class="fl">所属题库：<i class="key"><a href="{% url 'practice:practice_bank_detail' error_question.question.questionBank.id  %}">{{ error_question.question.questionBank.name }}</a></i></span>
+                                <span class="fl">&nbsp;第{{ error_question.question.question_num }}题</span>
+                                <span class="fl">&nbsp;{{ error_question.question.question_content }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+
