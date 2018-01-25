@@ -13,5 +13,7 @@ urlpatterns = [
     url(r'^choice_detail_submit/$', PracticeChoiceSubmit.as_view(), name='choice_detail_submit'),
     url(r'^choice_result/(?P<practice_bank_id>\d+)/(?P<practice_complete_num>\d+)/$', PracticeChoiceResult.as_view(), name='practice_choice_result'),
     url(r'^program_result/(?P<practice_bank_id>\d+)/(?P<practice_complete_num>\d+)/$', ProgramResult.as_view(), name='program_result'),
+    url(r'^program_comment/(?P<practice_id>\d+)/$', ProgramComment.as_view(), name='program_comment'),
+    url(r'^program_submit/(?P<practice_id>\d+)/$', ProgramSubmit.as_view(), name='program_submit'),
 
 ]

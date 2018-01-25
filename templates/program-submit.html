@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% block title %}选择题详情页 - 趣学在线网{% endblock %}
+{% load staticfiles %}
+{% block custom_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/question.css' %}"/>
+{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <div class="crumbs">
+                <ul>
+                    <li><a href="/">首页</a>></li>
+                    <li><a href="{% url 'practice:practice_list' %}">在线练习</a>></li>
+                    <li><a href="{% url 'practice:practice_bank_detail' question_bank.id %}">题库详情</a>></li>
+                    <li>编程题-提交老师点评</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+
+{% block content %}
+
+    <section style="min-height: 350px;overflow: auto;font-size: 16px">
+        <div class="wp">
+
+            <div class="question">
+
+
+                <div class="title"
+                     style="font-size: 16px">{{ program.question_content }}</div>
+
+
+                <form class="form-horizontal" action="" enctype="multipart/form-data" method="post" name="adUpload"
+                      id="adUpload" accept-charset="utf-8">
+                    <div class="col-sm-9 center-block">
+                        <label class="col-sm-4 control-label">选择上传广告类型</label>
+
+                        <div class="col-sm-5">
+                            <label class="checkbox-inline">
+                                <input type="radio" id="inlineCheckbox1" name="ad" onclick="adType(1)" checked
+                                       value="1"> 视频
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="radio" id="inlineCheckbox2" name="ad" onclick="adType(2)" value="2"> 图片
+                            </label>
+                        </div>
+                    </div>
+                    <br/><br/><br/>
+
+                    <div class="col-sm-9 center-block">
+                        <label for="inputPassword3" class="col-sm-4 control-label">选择excel文件</label>
+
+                        <div class="col-sm-3">
+                            {% csrf_token %}
+                            <input type="file" name="file" id="file_upload" class="form-control">
+                        </div>
+                        <input type="button" onclick="ajaxExcelUpload()" class="control-label btn btn-info" value="上传"/>　　
+                    </div>
+                </form>
+
+
+                <div style="padding: 10px 0">
+                    <div style="color:#F00" id="show_detail"></div>
+                    <div class="collect" id="collect"><i></i>收藏本题</div>
+                    <div class="button-group" style="margin:0 0 0 -100px">
+                        <button class="questiontips" id="questiontips" style="background: #ff8b3d">查看解题思路</button>
+                        <button class="submit" id="submit">我已完成</button>
+                        {% if is_last_question %}
+                            <button class="complete" id="complete" style="display:none;;background: goldenrod">完成交卷
+                            </button>
+                        {% else %}
+                            <button class="complete" id="complete" style="display:none;background: goldenrod">提前交卷
+                            </button>
+                            <button class="next" id="next" style="display:none;">下一题</button>
+                        {% endif %}
+                        <button class="download" id="download" style="display:none;background: darkorange">参考源码下载
+                        </button>
+                        <button class="video" id="video" style="display:none;background: goldenrod">观看讲解视频</button>
+                        <button class="comment" id="comment" style="display:none;background: lightskyblue">请老师点评
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+
+{% block custom_js %}
+
+    <script src="{% static 'js/jquery.min.js' %}" charset="utf-8"></script>
+    <script src="{% static 'js/ajaxfileupload.js' %}"></script>
+
+    <script>
+        function ajaxExcelUpload() {
+            $('#up_pro').show();
+//progress_dataUp();
+            var adType = $("input[type='radio']:checked").val();
+            $.ajaxFileUpload({
+                url: '{% url practice:program_submit %}',
+                type: 'POST',
+                data: {adType: adType},
+                secureuri: false,
+                fileElementId: 'file_upload',
+                dataType: 'json',
+                success: function (data, status) {
+
+                    if (data['res'] == 1) {
+                        $('#up_pro').html(data['data']);
+                        $('#up_pro').css('color', '#5bc0de');
+                        {# setTimeout(function(){#}
+                        {# $('#up_pro').html('正在进行数据导入，请稍等 ...');#}
+                        {# $('#up_pro').css('color','#333');#}
+                        {# $('#up_pro').hide();#}
+                        {# //location.reload();#}
+                        {# },2000);#}
+
+                    }
+                    if (data['res'] == 0) {
+                        $('#up_pro').html('上传失败！' + data['data']);
+                        $('#up_pro').css('color', '#c00');
+                    }
+
+                },
+                error: function (data, status, e) {
+                    console.log(status);
+                    $('#up_pro').html('上传失败！');
+                    $('#up_pro').css('color', '#c00');
+                    setTimeout(function () {
+                        $('#up_pro').html('数据导入中，请稍等 ...');
+                        $('#up_pro').css('color', '#333');
+                        $('#up_pro').hide();
+                    }, 2000);
+                }
+            });
+        }
+
+    </script>
+
+
+    <script>
+        $(function () {
+            //  点击收藏
+            $("#collect").on("click", function () {
+                $(this).toggleClass("collectok")
+            })
+            //  点击我已完成
+            $("#submit").on("click", function () {
+                //点击该按钮后 显示完成后用户可以看到的按钮
+                $('#complete').show();
+                $('#next').show();
+                $('#download').show();
+                $('#video').show();
+                $('#comment').show();
+                $('#submit').hide();
+                $('#questiontips').hide();
+            });
+            //  点击请老师点评  进入作业提交页面
+            $("#comment").on("click", function () {
+                window.location.href = "{% url 'practice:program_submit' program.id %}";
+            })
+        })
+    </script>
+{% endblock %}

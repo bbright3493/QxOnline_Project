@@ -96,6 +96,10 @@
             $("#complete").on("click", function () {
                 window.location.href = "{% url 'practice:program_result' practice_bank_id question.question_num %}";
             })
+             //  点击请老师点评  进入作业提交页面
+            $("#comment").on("click", function () {
+                window.location.href = "{% url 'practice:program_submit' question.id %}";
+            })
         })
     </script>
 {% endblock %}

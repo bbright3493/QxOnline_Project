@@ -124,7 +124,7 @@ class UserQuestionTeacher(models.Model):
     question_content = models.CharField(max_length=1000, default=u'', verbose_name=u'提问内容')
     teacher = models.ForeignKey(Teacher, verbose_name=u"回答讲师")
     answer = UEditorField(verbose_name=u"老师回答",width=600, height=300, imagePath="operation/ueditor/",
-                                         filePath="operation/ueditor/", default='')
+                                         filePath="operation/ueditor/")
     comment_status = models.IntegerField(choices=((1,"已回答"), (0,"未回答")), default=0, verbose_name=u'是否已经回答')
 
     class Meta:

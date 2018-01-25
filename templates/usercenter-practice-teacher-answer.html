@@ -38,11 +38,11 @@
                 </div>
                 <div class="companycenter">
                     <div class="group_list brief">
-                        {% for comment_practice in comment_practices %}
+                        {% for user_question in user_questions %}
                         <div >
                             <div class="des">
-                                <a href="{% url 'practice:program_comment' comment_practice.program.id %}"><h2>点我进入点评详情页</h2></a>
-                                <span class="fl">待点评</span>
+                                <a href="{% url 'users:user_question_answer' user_question.id %}"><h2>点我进入回答详情页</h2></a>
+                                <span class="fl">待回答</span>
                             </div>
                         </div>
                         {% endfor %}

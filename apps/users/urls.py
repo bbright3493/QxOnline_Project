@@ -5,7 +5,7 @@ from django.conf.urls import url, include
 
 from .views import UserinfoView, UploadImageView, UpdatePwdView, SendEmailCodeView
 from .views import UpdateEmailView, MyCourseView, MyFavOrgView, MyFavTeacherView, MyFavCourseView, MymessageView, \
-    MyPracticeCount, MyPracticeComment, MyPracticeErrors
+    MyPracticeCount, MyPracticeComment, MyPracticeErrors, UserQuestionAnswer, UserQuestionAnswered
 
 
 urlpatterns = [
@@ -44,4 +44,6 @@ urlpatterns = [
     url(r'^mypractice/commnet/$', MyPracticeComment.as_view(), name="my_practice_comment"),
     #我的错题集
     url(r'^mypractice/error/$', MyPracticeErrors.as_view(), name="my_practice_error"),
+     url(r'^user_question_answer/(?P<user_question_id>\d+)/$', UserQuestionAnswer.as_view(), name='user_question_answer'),
+    url(r'^user_question_answered/$', UserQuestionAnswered.as_view(), name='user_question_answered'),
 ]

@@ -3,7 +3,7 @@ __author__ = 'bobby'
 __date__ = '2016/10/25 23:59'
 import xadmin
 
-from .models import UserAsk, UserCourse, UserMessage, CourseComments, UserFavorite
+from .models import UserAsk, UserCourse, UserMessage, CourseComments, UserFavorite, UserTeacher, UserQuestionTeacher
 
 class UserAskAdmin(object):
     list_display = ['name', 'mobile', 'course_name', 'add_time']
@@ -39,11 +39,25 @@ class UserFavoriteAdmin(object):
     model_icon = 'fa fa-heart'
 
 
+class UserTeacherAdmin(object):
+    list_display = ['user', 'teacher']
+    search_fields = ['user', 'teacher']
+    list_filter = ['user', 'teacher']
+    model_icon = 'fa fa-heart'
+
+
+class UserQuestionTeacherAdmin(object):
+    list_display = ['user', 'question_content', 'teacher', 'answer', 'comment_status']
+    search_fields = ['user', 'question_content', 'teacher', 'answer', 'comment_status']
+    list_filter = ['user', 'question_content', 'teacher', 'answer', 'comment_status']
+    model_icon = 'fa fa-heart'
+
+
 xadmin.site.register(UserAsk, UserAskAdmin)
 xadmin.site.register(UserCourse, UserCourseAdmin)
 xadmin.site.register(UserMessage, UserMessageAdmin)
 xadmin.site.register(CourseComments, CourseCommentsAdmin)
 xadmin.site.register(UserFavorite, UserFavoriteAdmin)
-
-
+xadmin.site.register(UserTeacher, UserTeacherAdmin)
+xadmin.site.register(UserQuestionTeacher, UserQuestionTeacherAdmin)
 

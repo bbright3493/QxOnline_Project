@@ -10,16 +10,20 @@ from django.views.generic.base import View
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from operation.models import UserErrorQuestion, UserPractice
 from utils.mixin_utils import LoginRequiredMixin
+import os
+
+
 # Create your views here.
 
 class QuestionBankView(View):
     '''
     题库列表页
     '''
+
     def get(self, request):
         question_banks = QuestionBank.objects.all()
 
-         #对课程进行分页
+        # 对课程进行分页
         try:
             page = request.GET.get('page', 1)
         except PageNotAnInteger:
@@ -29,6 +33,7 @@ class QuestionBankView(View):
         question_banks = p.page(page)
 
         return render(request, 'practice-list.html', locals())
+
 
 class PracticeBankDetailView(View):
     '''
@@ -45,13 +50,14 @@ class PracticeChoiceDetailView(View):
     '''
     选择题详情页
     '''
+
     def get(self, request, practice_bank_id, practice_num):
         is_last_question = False
         question_bank = QuestionBank.objects.get(id=practice_bank_id)
         question = ChoiceQuestion.objects.get(question_num=practice_num, questionBank=question_bank)
         next_practice_num = str(int(practice_num) + 1)
         if practice_num == '1':
-            #分数清0
+            # 分数清0
             request.session['user_score'] = 0
         try:
             next_question = ChoiceQuestion.objects.get(question_num=next_practice_num, questionBank=question_bank)
@@ -59,17 +65,19 @@ class PracticeChoiceDetailView(View):
             is_last_question = True
         return render(request, 'practice-choice-detail.html', locals())
 
+
 class PracticeChoiceDetailExplainView(View):
     '''
     选择题详情页
     '''
+
     def get(self, request, practice_bank_id, practice_num):
         is_last_question = False
         question_bank = QuestionBank.objects.get(id=practice_bank_id)
         question = ChoiceQuestion.objects.get(question_num=practice_num, questionBank=question_bank)
         next_practice_num = str(int(practice_num) + 1)
         if practice_num == '1':
-            #分数清0
+            # 分数清0
             request.session['user_score'] = 0
         try:
             next_question = ChoiceQuestion.objects.get(question_num=next_practice_num, questionBank=question_bank)
@@ -86,16 +94,16 @@ class PracticeChoiceSubmit(View):
         practice_bank_id = request.POST.get('practice_bank_id')
         print user_answer, practice_num
         if user_answer != '-1':
-            #查询正确答案
+            # 查询正确答案
             questionBank = QuestionBank.objects.get(id=practice_bank_id)
             question = ChoiceQuestion.objects.get(question_num=practice_num, questionBank=questionBank)
             correct_answer = question.answer
-            #判断用户是否答对
-            if answer_list[int(user_answer)]==correct_answer:
-                #答对则更新分数session
-                request.session['user_score'] = request.session.get('user_score',default=0) + 1
+            # 判断用户是否答对
+            if answer_list[int(user_answer)] == correct_answer:
+                # 答对则更新分数session
+                request.session['user_score'] = request.session.get('user_score', default=0) + 1
             else:
-                #答错则存储到用户错题集
+                # 答错则存储到用户错题集
                 user = request.user
                 try:
                     UserErrorQuestion.objects.get(user=user, question=question)
@@ -112,17 +120,17 @@ class PracticeChoiceSubmit(View):
 class PracticeChoiceResult(LoginRequiredMixin, View):
     def get(self, request, practice_bank_id, practice_complete_num):
         question_bank = QuestionBank.objects.get(id=practice_bank_id)
-        score =  request.session.get('user_score',default=0)
+        score = request.session.get('user_score', default=0)
         if score:
-            correct_percent = score*100/question_bank.choicequestion_set.all().count()
+            correct_percent = score * 100 / question_bank.choicequestion_set.all().count()
         else:
             correct_percent = 0
-        #保存用户作业完成情况
-        #首先查询该用户是否有该题库记录
+        # 保存用户作业完成情况
+        # 首先查询该用户是否有该题库记录
         try:
             user_practice = UserPractice.objects.get(user=request.user, practice_bank_id=practice_bank_id)
         except UserPractice.DoesNotExist:
-            #没有该信息则存储题库数据
+            # 没有该信息则存储题库数据
             user_practice = UserPractice()
             user_practice.user = request.user
             user_practice.practice_bank_id = practice_bank_id
@@ -131,7 +139,7 @@ class PracticeChoiceResult(LoginRequiredMixin, View):
             user_practice.save()
 
         else:
-            #有该信息则更新题库数据
+            # 有该信息则更新题库数据
             user_practice.practice_num = practice_complete_num
             user_practice.practice_bank_correct_percent = correct_percent
             user_practice.save()
@@ -143,6 +151,7 @@ class ProgramDetailView(LoginRequiredMixin, View):
     '''
     编程题详情页
     '''
+
     def get(self, request, practice_bank_id, practice_num):
 
         is_last_question = False
@@ -160,12 +169,12 @@ class ProgramDetailView(LoginRequiredMixin, View):
 class ProgramResult(LoginRequiredMixin, View):
     def get(self, request, practice_bank_id, practice_complete_num):
         question_bank = QuestionBank.objects.get(id=practice_bank_id)
-        #保存用户作业完成情况
-        #首先查询该用户是否有该题库记录
+        # 保存用户作业完成情况
+        # 首先查询该用户是否有该题库记录
         try:
             user_practice = UserPractice.objects.get(user=request.user, practice_bank_id=practice_bank_id)
         except UserPractice.DoesNotExist:
-            #没有该信息则存储题库数据
+            # 没有该信息则存储题库数据
             user_practice = UserPractice()
             user_practice.user = request.user
             user_practice.practice_bank_id = practice_bank_id
@@ -173,9 +182,52 @@ class ProgramResult(LoginRequiredMixin, View):
             user_practice.save()
 
         else:
-            #有该信息则更新题库数据
+            # 有该信息则更新题库数据
             user_practice.practice_num = practice_complete_num
             user_practice.save()
-
-
         return render(request, 'program-result.html', locals())
+
+
+class ProgramSubmit(View):
+    def get(self, request, practice_id):
+        # 获取题目信息
+        program = ProgramQuestion.objects.get(id=practice_id)
+        question_bank = program.questionBank
+        return render(request, 'program-submit.html', locals())
+
+    def post(self, request):
+        file = request.FILES.get("file", None)
+        if file:  # 处理附件上传到方法
+            try:
+                self.handle_upload_file(file)
+            except Exception as e:
+                pass
+            data = str(e)
+            res = 0
+            result = {'res': res, 'data': data}
+            content = json.dumps(result)
+            return HttpResponse(content)
+
+    def handle_upload_file(filename):
+        """
+        handle_upload_file 上传文件
+        """
+        try:
+            path = os.path.dirname(os.path.dirname(__file__))+'/static/ad/upload/'
+            print path
+            if not os.path.exists(path):
+                os.makedirs(path)
+                destination = open(path+filename.name, 'wb+')
+            for chunk in filename.chunks():
+                destination.write(chunk)
+                destination.close()
+                res = 1
+        except Exception, e:
+            print e
+        res = 0
+        return res
+
+
+class ProgramComment(View):
+    def get(self, request, practice_id):
+        pass

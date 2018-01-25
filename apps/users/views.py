@@ -16,7 +16,7 @@ from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm, UploadIma
 from .forms import UserInfoForm
 from utils.email_send import send_register_email, send_mail_test
 from utils.mixin_utils import LoginRequiredMixin
-from operation.models import UserCourse, UserFavorite, UserMessage, UserErrorQuestion, UserPractice, UserPracticeComment, UserTeacher
+from operation.models import UserCourse, UserFavorite, UserMessage, UserErrorQuestion, UserPractice, UserPracticeComment, UserTeacher, UserQuestionTeacher
 from organization.models import CourseOrg, Teacher
 from courses.models import Course
 from .models import Banner
@@ -307,12 +307,13 @@ class MyPracticeErrors(LoginRequiredMixin, View):
     def get(self, request):
         #查询用户身份是否是老师
         try:
-            teacher = UserTeacher.objects.get(user=request.user)
+            teacher = UserTeacher.objects.get(user=request.user).teacher
         except UserTeacher.DoesNotExist:
             error_questions = UserErrorQuestion.objects.filter(user=request.user)
             return render(request, 'usercenter-practice-error.html', locals())
         else:
             #查询该老师已点评作业
+            will_comment = 0
             comment_practice = UserPracticeComment.objects.filter(teacher=teacher, comment_status=1)
             return render(request, 'usercenter-practice-teacher-comment.html', locals())
 
@@ -324,13 +325,14 @@ class MyPracticeCount(LoginRequiredMixin, View):
     def get(self, request):
         # 查询用户身份是否是老师
         try:
-            teacher = UserTeacher.objects.get(user=request.user)
+            teacher = UserTeacher.objects.get(user=request.user).teacher
         except UserTeacher.DoesNotExist:
             user_practice_banks = UserPractice.objects.filter(user=request.user)
             return render(request, 'usercenter-practice-count.html', locals())
         else:
             # 查询该老师未点评作业
-            comment_practice = UserPracticeComment.objects.filter(teacher=teacher, comment_status=0)
+            will_comment = 1
+            comment_practices = UserPracticeComment.objects.filter(teacher=teacher, comment_status=0)
             return render(request, 'usercenter-practice-teacher-comment.html', locals())
 
 
@@ -339,11 +341,41 @@ class MyPracticeCount(LoginRequiredMixin, View):
 
 class MyPracticeComment(LoginRequiredMixin, View):
     '''
-    我的提交点评
+    我的提交点评 或者是老师个人中心的未回答提问页
     '''
     def get(self, request):
-        return render(request, 'usercenter-practice-comment.html', locals())
+        #查询用户是老师还是学生
+        #根据不同的身份进行不同页面的渲染
+        try:
+            teacher = UserTeacher.objects.get(user=request.user).teacher
+        except UserTeacher.DoesNotExist:
+            return render(request, 'usercenter-practice-comment.html', locals())
+        else:
+            user_questions = UserQuestionTeacher.objects.filter(teacher=teacher, comment_status=0)
+            return render(request, 'usercenter-practice-teacher-answer.html', locals())
 
+
+class UserQuestionAnswered(View):
+    '''
+    我的提交点评 或者是老师个人中心的未回答提问页
+    '''
+    def get(self, request):
+        #查询用户是老师还是学生
+        #根据不同的身份进行不同页面的渲染
+        try:
+            teacher = UserTeacher.objects.get(user=request.user).teacher
+        except UserTeacher.DoesNotExist:
+            return render(request, 'usercenter-practice-comment.html', locals())
+        else:
+            user_questions = UserQuestionTeacher.objects.filter(teacher=teacher, comment_status=1)
+            return render(request, 'usercenter-practice-teacher-answer.html', locals())
+
+
+
+class UserQuestionAnswer(View):
+    def get(self, request, user_question_id):
+        user_question = UserQuestionTeacher.objects.get(id=user_question_id)
+        return render(request, 'user-question-answer.html', locals())
 
 
 class MymessageView(LoginRequiredMixin, View):
