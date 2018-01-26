@@ -111,9 +111,10 @@ class UserPracticeComment(models.Model):
     comment = UEditorField(verbose_name=u"老师点评",width=600, height=300, imagePath="operation/ueditor/",
                                          filePath="operation/ueditor/", default='')
     level = models.CharField(verbose_name=u"评分等级", choices=(("wm","完美"), ("yx","优秀"), ("lh","良好"), ("hg","合格"),("bhg","不合格")), max_length=8)
-    teacher = models.ForeignKey(Teacher, verbose_name=u"点评讲师", default='no')
+    teacher = models.ForeignKey(Teacher, verbose_name=u"点评讲师")
     comment_status = models.IntegerField(choices=((1,"已点评"), (0,"未点评")), default=0, verbose_name=u'是否已经点评')
-
+    user_submit_time = models.DateTimeField(default=datetime.now, verbose_name=u"作业提交时间")
+    teacher_comment_time = models.DateTimeField(default=datetime.now, verbose_name=u"老师点评时间")
     class Meta:
         verbose_name = u'用户的作业点评'
         verbose_name_plural = verbose_name
@@ -125,8 +126,9 @@ class UserQuestionTeacher(models.Model):
     teacher = models.ForeignKey(Teacher, verbose_name=u"回答讲师")
     answer = UEditorField(verbose_name=u"老师回答",width=600, height=300, imagePath="operation/ueditor/",
                                          filePath="operation/ueditor/")
-    comment_status = models.IntegerField(choices=((1,"已回答"), (0,"未回答")), default=0, verbose_name=u'是否已经回答')
-
+    question_status = models.IntegerField(choices=((1,"已回答"), (0,"未回答")), default=0, verbose_name=u'是否已经回答')
+    user_question_time = models.DateTimeField(default=datetime.now, verbose_name=u"提问时间")
+    teacher_answer_time = models.DateTimeField(default=datetime.now, verbose_name=u"回答时间")
     class Meta:
         verbose_name = u'用户问题回答'
         verbose_name_plural = verbose_name

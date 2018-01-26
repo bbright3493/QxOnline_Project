@@ -378,6 +378,27 @@ class UserQuestionAnswer(View):
         return render(request, 'user-question-answer.html', locals())
 
 
+
+class UserQuestionAnswered(View):
+    def get(self, request):
+        no_question = False
+        try:
+            user_questions = UserQuestionTeacher.objects.filter(user=request.user, question_status=1)
+        except UserQuestionTeacher.DoesNotExist:
+            no_question = True
+        return render(request, 'usercenter-question-answered.html', locals())
+
+
+class UserQuestionWillAnswer(View):
+    def get(self, request):
+        no_question = False
+        try:
+            user_questions = UserQuestionTeacher.objects.filter(user=request.user, question_status=0)
+        except UserQuestionTeacher.DoesNotExist:
+            no_question = True
+        return render(request, 'usercenter-question-will-answer.html', locals())
+
+
 class MymessageView(LoginRequiredMixin, View):
     """
     我的消息
