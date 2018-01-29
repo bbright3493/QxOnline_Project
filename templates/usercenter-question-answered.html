@@ -4,7 +4,7 @@
 {% block custom_bread %}
     <section>
         <div class="wp">
-            <ul  class="crumbs">
+            <ul class="crumbs">
                 <li><a href="{% url 'index' %}">首页</a>></li>
                 <li><a href="/user/home/">个人中心</a>></li>
                 <li>我的提问</li>
@@ -14,43 +14,42 @@
 {% endblock %}
 
 {% block right_content %}
-    <div class="right" >
-            <div class="personal_des Releasecont">
-                <div class="head">
-                    <h1>我的提问</h1>
-                </div>
+    <div class="right">
+        <div class="personal_des Releasecont">
+            <div class="head">
+                <h1>我的提问</h1>
             </div>
-            <div class="personal_des permessage">
-                <div class="head">
-                    <ul class="tab_header messagehead">
-                        <li class="active"><a href="{% url 'users:my_question_answered' %}">已回答提问</a> </li>
-                        <li><a href="{% url 'users:my_question_will_answer' %}">未回答提问</a></li>
-                    </ul>
+        </div>
+        <div class="personal_des permessage">
+            <div class="head">
+                <ul class="tab_header messagehead">
+                    <li class="active"><a href="{% url 'users:my_question_answered' %}">已回答提问</a></li>
+                    <li><a href="{% url 'users:my_question_will_answer' %}">未回答提问</a></li>
+                </ul>
 
-                </div>
-                <div class="companycenter">
-                    <div class="group_list brief">
+            </div>
+            <div class="companycenter">
+                <div class="group_list brief">
+                    {% if no_question %}
+                        <span class="fr">你还没有向老师提问哦，有问题就问他吧，可以在课程学习页面向老师提问，也可以在我的老师页面向对应的课程老师提问哦</span>
+                    {% else %}
                         {% for answered_question in ansswered_questions %}
-                        <div class="module1_5 box">
-                            <a href="{% url 'course:course_detail' fav_course.id %}">
-                                <img width="214" height="190" src="{{ MEDIA_URL }}{{ fav_course.image }}"/>
-                            </a>
-                            <div class="des">
-                                <a href="{% url 'course:course_detail' fav_course.id %}"><h2>{{ fav_course.name }}</h2></a>
-                                <span class="fl">时长：<i class="key">{{ fav_course.learn_times }}</i></span>
-                                <span class="fr">学习人数：{{ fav_course.students }}</span>
-                            </div>
-                            <div class="bottom">
-                                <span class="fl">{{ fav_course.course_org.name }}</span>
-                                <span class="delete-group fr jsDeleteFav_course" data-favid="{{ fav_course.id }}"></span>
-                            </div>
-                        </div>
-                        {% endfor %}
+                            <div class="module1_5 box">
 
-                    </div>
+                                <div class="des">
+                                    <a href="{% url 'course:course_detail' fav_course.id %}">
+                                        <h2>{{ fav_course.name }}</h2></a>
+                                    <span class="fl">：<i class="key">{{ answered_question.question_content }}</i></span>
+                                    <span class="fr">回答老师：{{ answered_question.teacher.name }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
                 </div>
             </div>
         </div>
+    </div>
 {% endblock %}
 
 

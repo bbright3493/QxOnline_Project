@@ -51,7 +51,7 @@ class UserQuestionTeacherAdmin(object):
     search_fields = ['user', 'question_content', 'teacher', 'answer', 'question_status']
     list_filter = ['user', 'question_content', 'teacher', 'answer', 'question_status']
     model_icon = 'fa fa-heart'
-    style_fields = {"answer": "ueditor"}
+    style_fields = {"answer": "ueditor", "question_content":"ueditor"}
 
 xadmin.site.register(UserAsk, UserAskAdmin)
 xadmin.site.register(UserCourse, UserCourseAdmin)

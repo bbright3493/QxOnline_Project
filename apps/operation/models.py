@@ -122,7 +122,8 @@ class UserPracticeComment(models.Model):
 
 class UserQuestionTeacher(models.Model):
     user = models.ForeignKey(UserProfile, verbose_name=u"提问用户")
-    question_content = models.CharField(max_length=1000, default=u'', verbose_name=u'提问内容')
+    question_content = UEditorField(verbose_name=u"提问内容", width=600, height=300, imagePath="operation/ueditor/",
+                          filePath="operation/ueditor/")
     teacher = models.ForeignKey(Teacher, verbose_name=u"回答讲师")
     answer = UEditorField(verbose_name=u"老师回答",width=600, height=300, imagePath="operation/ueditor/",
                                          filePath="operation/ueditor/")

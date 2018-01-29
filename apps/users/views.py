@@ -378,6 +378,11 @@ class UserQuestionAnswer(View):
         return render(request, 'user-question-answer.html', locals())
 
 
+class UserQuestionDetail(View):
+    def get(self, request, user_question_id):
+        user_question = UserQuestionTeacher.objects.get(id=user_question_id)
+        return render(request, 'user-question-detail.html', locals())
+
 
 class UserQuestionAnswered(View):
     def get(self, request):
