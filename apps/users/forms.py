@@ -5,6 +5,8 @@ from django import forms
 from captcha.fields import CaptchaField
 
 from .models import UserProfile
+from operation.models import UserQuestionTeacher
+from  DjangoUeditor.forms import  UEditorModelForm
 
 class LoginForm(forms.Form):
     username = forms.CharField(required=True)
@@ -38,3 +40,8 @@ class UserInfoForm(forms.ModelForm):
         model = UserProfile
         fields = ['nick_name', 'gender', 'birday', 'address', 'mobile']
 
+
+class UserQuestionTeacherForm(UEditorModelForm):
+     class Meta:
+        model = UserQuestionTeacher
+        fields = ['question_content', 'answer']

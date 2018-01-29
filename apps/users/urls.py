@@ -44,9 +44,9 @@ urlpatterns = [
     url(r'^mypractice/commnet/$', MyPracticeComment.as_view(), name="my_practice_comment"),
     # 我的错题集
     url(r'^mypractice/error/$', MyPracticeErrors.as_view(), name="my_practice_error"),
-    url(r'^user_question_answer/(?P<user_question_id>\d+)/$', UserQuestionAnswer.as_view(),
-        name='user_question_answer'),
+    #老师已回答问题
     url(r'^my_question_answered/$', UserQuestionAnswered.as_view(), name='my_question_answered'),
+    #老师未回答问题
     url(r'^my_question_will_answer/$', UserQuestionWillAnswer.as_view(), name='my_question_will_answer'),
     # 我的提问详情页
     url(r'^my_question_detail/(?P<user_question_id>\d+)/$', UserQuestionDetail.as_view(), name='my_question_detail'),

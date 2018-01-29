@@ -13,7 +13,7 @@ from django.core.urlresolvers import reverse
 
 from .models import UserProfile, EmailVerifyRecord
 from .forms import LoginForm, RegisterForm, ForgetForm, ModifyPwdForm, UploadImageForm
-from .forms import UserInfoForm
+from .forms import UserInfoForm, UserQuestionTeacherForm
 from utils.email_send import send_register_email, send_mail_test
 from utils.mixin_utils import LoginRequiredMixin
 from operation.models import UserCourse, UserFavorite, UserMessage, UserErrorQuestion, UserPractice, UserPracticeComment, UserTeacher, UserQuestionTeacher
@@ -372,15 +372,10 @@ class UserQuestionAnswered(View):
 
 
 
-class UserQuestionAnswer(View):
-    def get(self, request, user_question_id):
-        user_question = UserQuestionTeacher.objects.get(id=user_question_id)
-        return render(request, 'user-question-answer.html', locals())
-
-
 class UserQuestionDetail(View):
     def get(self, request, user_question_id):
         user_question = UserQuestionTeacher.objects.get(id=user_question_id)
+        form = UserQuestionTeacherForm()
         return render(request, 'user-question-detail.html', locals())
 
 

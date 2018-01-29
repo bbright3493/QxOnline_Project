@@ -21,12 +21,16 @@
 {% block content %}
     <section style="font-size: 18px;min-height: 350px;overflow: auto">
         <div class="wp">
+            {{ form.media }}
             <p>{{ user_question.user.name }}</p>
-            {% if user_question.question_content %}
-                <p style="padding: 25px 0;color: red;font-size: 23px">{{ user_question.question_content }}</p>
-            {% else %}
-
-            {% endif %}
+            <li>用户提问：
+                <form action="" method="post">
+                    <table>
+                        {{ form.as_table }}
+                    </table>
+                    <input type="submit" value="Submit">
+                </form>
+            </li>
         </div>
     </section>
 
